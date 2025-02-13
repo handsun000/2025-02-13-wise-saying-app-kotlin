@@ -32,5 +32,8 @@ fun main() {
                 println("${data["id"]} / ${data["author"]} / ${data["content"]}")
             }
         }
+        else if (command.contains("삭제")) {
+
+        }
     }
 }
