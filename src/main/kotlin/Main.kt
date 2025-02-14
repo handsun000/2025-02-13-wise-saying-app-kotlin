@@ -42,13 +42,30 @@ fun main() {
             for (data in list) {
                 println("${data["id"]} / ${data["author"]} / ${data["content"]}")
             }
-        } else if (command.contains("삭제")) {
+        } else if (command.startsWith("삭제")) {
             val id = command.substringAfter("id=").toIntOrNull()
 
             val removedItem = list.find { it["id"] == id }
             if (removedItem != null) {
                 list.remove(removedItem)
                 println("${id}번 명언이 삭제되었습니다.")
+            }
+            else {
+                println("${id}번 명언은 존재하지 않습니다.")
+            }
+        } else if (command.startsWith("수정")) {
+            val id = command.substringAfter("id=").toIntOrNull();
+
+            val updateItem = list.find { it["id"] == id }?.toMutableMap()
+            if (updateItem != null) {
+                list.remove(updateItem)
+                println("명언 (기존) : ${updateItem["content"]}")
+                print("명언 : ")
+                updateItem["content"] = scanner.nextLine()
+                println("작가(기존) : ${updateItem["author"]}")
+                print("작가 : ")
+                updateItem["author"] = scanner.nextLine()
+                list.add(updateItem)
             }
             else {
                 println("${id}번 명언은 존재하지 않습니다.")
