@@ -14,12 +14,8 @@ class WiseSayingService(private val wiseSayingRepository: WiseSayingRepository) 
         wiseSayingRepository.save(wiseSaying)
     }
 
-    fun getList() {
-        val wiseSayings: List<WiseSaying> = wiseSayingRepository.findAll();
-
-        for (wiseSaying in wiseSayings) {
-            println("${wiseSaying.id} / ${wiseSaying.author} / ${wiseSaying.content}")
-        }
+    fun getList(): List<WiseSaying> {
+        return wiseSayingRepository.findAll();
     }
 
     fun delete(wiseSaying: WiseSaying) {

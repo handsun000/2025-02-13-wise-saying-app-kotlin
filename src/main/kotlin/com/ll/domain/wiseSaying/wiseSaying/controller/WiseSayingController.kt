@@ -21,7 +21,11 @@ class WiseSayingController(private val wiseSayingService: WiseSayingService) {
         println("번호 / 작가 / 명언")
         println("----------------------")
 
-        wiseSayingService.getList();
+        val wiseSayings = wiseSayingService.getList()
+
+        for (wiseSaying in wiseSayings) {
+            println("${wiseSaying.id} / ${wiseSaying.author} / ${wiseSaying.content}")
+        }
     }
 
     fun delete(id: Int?) {
