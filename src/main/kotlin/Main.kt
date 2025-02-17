@@ -1,72 +1,14 @@
 package com.ll
 
-import java.util.Objects
-import java.util.Scanner
+import com.ll.com.ll.domain.wiseSaying.wiseSaying.controller.WiseSayingController
+import com.ll.com.ll.domain.wiseSaying.wiseSaying.repository.WiseSayingRepository
+import com.ll.domain.wiseSaying.wiseSaying.service.WiseSayingService
+import com.ll.file.FileUtil
 
 fun main() {
-    val scanner = Scanner(System.`in`)
-    println("== 명언 앱 ==")
+    val wiseSayingRepository = WiseSayingRepository(FileUtil())
+    val wiseSayingService = WiseSayingService(wiseSayingRepository)
+    val wiseSayingController = WiseSayingController(wiseSayingService)
 
-    var idx = 0;
-    val list = mutableListOf<Map<String, Any>>(
-        mapOf(
-            "id" to 1,
-            "content" to "현재를 사랑하라",
-            "author" to "작자미상"
-        ),
-        mapOf(
-            "id" to 2,
-            "content" to "과거를 사랑하라",
-            "author" to "작자미상"
-        ),
-    )
-    idx = list.size
-
-    while (true) {
-        print("명령) ")
-        val command = scanner.nextLine()
-        if ("종료" == command) break;
-        else if ("등록" == command) {
-            val map = mutableMapOf<String, Any>()
-            print("명언 : ")
-            map["content"] = scanner.nextLine()
-            print("작가 : ")
-            map["author"] = scanner.nextLine()
-            idx++;
-            map["id"] = idx
-            list.add(map)
-            println("%d번 명언이 등록되었습니다.".format(idx))
-        } else if ("목록" == command) {
-            println("번호 / 작가 / 명언")
-            println("----------------------")
-            for (data in list) {
-                println("${data["id"]} / ${data["author"]} / ${data["content"]}")
-            }
-        } else if (command.startsWith("삭제")) {
-            val id = command.substringAfter("id=").toIntOrNull()
-
-            val removedItem = list.find { it["id"] == id }
-            if (removedItem != null) {
-                list.remove(removedItem)
-                println("${id}번 명언이 삭제되었습니다.")
-            } else {
-                println("${id}번 명언은 존재하지 않습니다.")
-            }
-        } else if (command.startsWith("수정")) {
-            val id = command.substringAfter("id=").toIntOrNull();
-
-            val index = list.indexOfFirst { it["id"] == id }
-            if (index != -1) {
-                val updateItem = list[index].toMutableMap()
-                println("명언 (기존) : ${updateItem["content"]}")
-                print("명언 : ")
-                updateItem["content"] = scanner.nextLine()
-                println("작가(기존) : ${updateItem["author"]}")
-                print("작가 : ")
-                updateItem["author"] = scanner.nextLine()
-            } else {
-                println("${id}번 명언은 존재하지 않습니다.")
-            }
-        }
-    }
+    App(wiseSayingController).run()
 }
