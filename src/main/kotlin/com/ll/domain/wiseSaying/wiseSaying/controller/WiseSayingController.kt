@@ -1,7 +1,10 @@
 package com.ll.com.ll.domain.wiseSaying.wiseSaying.controller
 
 import com.ll.com.ll.domain.wiseSaying.wiseSaying.`object`.WiseSayingIdGenerator
+import com.ll.com.ll.domain.wiseSaying.wiseSaying.`object`.WiseSayings
+import com.ll.domain.wiseSaying.wiseSaying.entity.WiseSaying
 import com.ll.domain.wiseSaying.wiseSaying.service.WiseSayingService
+import kotlin.reflect.typeOf
 
 class WiseSayingController(private val wiseSayingService: WiseSayingService) {
 
@@ -17,19 +20,32 @@ class WiseSayingController(private val wiseSayingService: WiseSayingService) {
         println("${WiseSayingIdGenerator.getId()}번 명언이 등록되었습니다.")
     }
 
-    fun getList() {
+    fun getList(param: String) {
         println("번호 / 작가 / 명언")
         println("----------------------")
 
-        val wiseSayings = wiseSayingService.getList()
+        val (wiseSayings, page, totalPage) = wiseSayingService.getList(param)
 
         for (wiseSaying in wiseSayings) {
             println("${wiseSaying.id} / ${wiseSaying.author} / ${wiseSaying.content}")
         }
+
+        println("----------------------")
+        print("페이지 : ")
+
+        for (i in 1..totalPage) {
+            if (i != page) print(i)
+            else print("[${i}]")
+
+            if (i != totalPage)
+            print(" / ")
+        }
+        println()
     }
 
-    fun delete(id: Int?) {
-        if (id != null) {
+    fun delete(param: String) {
+        if (param.contains("id=")) {
+            val id = param.substringAfter("id=").toIntOrNull() ?: return
             val wiseSaying = wiseSayingService.getItem(id)
 
             if (wiseSaying == null) {
@@ -38,11 +54,12 @@ class WiseSayingController(private val wiseSayingService: WiseSayingService) {
                 wiseSayingService.delete(wiseSaying)
                 println("${id}번 명언이 삭제되었습니다.")
             }
-        } else return
+        }
     }
 
-    fun modify(id: Int?) {
-        if (id != null) {
+    fun modify(param: String) {
+        if (param.contains("id=")) {
+            val id = param.substringAfter("id=").toIntOrNull() ?: return
             val wiseSaying = wiseSayingService.getItem(id)
 
             if (wiseSaying == null) {
@@ -58,7 +75,7 @@ class WiseSayingController(private val wiseSayingService: WiseSayingService) {
 
                 wiseSayingService.modify(wiseSaying)
             }
-        } else return
+        }
     }
 
     fun build() {

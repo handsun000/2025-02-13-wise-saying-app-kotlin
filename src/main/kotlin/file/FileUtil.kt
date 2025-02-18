@@ -33,7 +33,13 @@ class FileUtil {
     }
 
     fun loadListFromJson(filename: String): List<WiseSaying> {
-        return loadFromJson<List<WiseSaying>>(filename) ?: emptyList()
+        val filePath = Paths.get(DIRECTORY_PATH, filename)
+        if (!filePath.exists()) return mutableListOf();
+
+        val jsonString = Files.readString(filePath)
+        val type = object : TypeToken<List<WiseSaying>>() {}.type
+
+        return Gson().fromJson(jsonString, type)
     }
 
     fun loadLastId(filename: String): Int {
